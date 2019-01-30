@@ -44,7 +44,10 @@ pub unsafe extern "C" fn __rust_start_panic(_payload: usize) -> u32 {
         libc::abort();
     }
 
-    #[cfg(any(windows, all(target_arch = "wasm32", not(target_os = "emscripten"))))]
+    #[cfg(any(target_os = "redox",
+              target_os = "optee",
+              windows,
+              all(target_arch = "wasm32", not(target_os = "emscripten"))))]
     unsafe fn abort() -> ! {
         core::intrinsics::abort();
     }
