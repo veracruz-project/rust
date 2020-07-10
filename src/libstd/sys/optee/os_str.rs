@@ -1,6 +1,3 @@
-/// The underlying OsString/OsStr implementation on Unix systems: just
-/// a `Vec<u8>`/`[u8]`.
-
 use crate::borrow::Cow;
 use crate::fmt;
 use crate::str;
@@ -103,6 +100,14 @@ impl Buf {
         unsafe { mem::transmute(&*self.inner) }
     }
 
+    #[inline]
+    pub fn as_mut_slice(&mut self) -> &mut Slice {
+        // Safety: Slice just wraps [u8],
+        // and &mut *self.inner is &mut [u8], therefore
+        // transmuting &mut [u8] to &mut Slice is safe.
+        unsafe { mem::transmute(&mut *self.inner) }
+    }
+
     pub fn into_string(self) -> Result<String, Buf> {
         String::from_utf8(self.inner).map_err(|p| Buf { inner: p.into_bytes() } )
     }
@@ -154,6 +159,10 @@ impl Slice {
         Buf { inner: self.inner.to_vec() }
     }
 
+    pub fn clone_into(&self, buf: &mut Buf) {
+        self.inner.clone_into(&mut buf.inner)
+    }
+
     #[inline]
     pub fn into_box(&self) -> Box<Slice> {
         let boxed: Box<[u8]> = self.inner.into();
@@ -176,4 +185,35 @@ impl Slice {
         let rc: Rc<[u8]> = Rc::from(&self.inner);
         unsafe { Rc::from_raw(Rc::into_raw(rc) as *const Slice) }
     }
+
+    #[inline]
+    pub fn make_ascii_lowercase(&mut self) {
+        self.inner.make_ascii_lowercase()
+    }
+
+    #[inline]
+    pub fn make_ascii_uppercase(&mut self) {
+        self.inner.make_ascii_uppercase()
+    }
+
+    #[inline]
+    pub fn to_ascii_lowercase(&self) -> Buf {
+        Buf { inner: self.inner.to_ascii_lowercase() }
+    }
+
+    #[inline]
+    pub fn to_ascii_uppercase(&self) -> Buf {
+        Buf { inner: self.inner.to_ascii_uppercase() }
+    }
+
+    #[inline]
+    pub fn is_ascii(&self) -> bool {
+        self.inner.is_ascii()
+    }
+
+    #[inline]
+    pub fn eq_ignore_ascii_case(&self, other: &Self) -> bool {
+        self.inner.eq_ignore_ascii_case(&other.inner)
+    }
+
 }
