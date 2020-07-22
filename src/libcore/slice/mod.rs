@@ -2338,13 +2338,15 @@ impl<T> [T] {
         let src_start = match src.start_bound() {
             ops::Bound::Included(&n) => n,
             ops::Bound::Excluded(&n) => {
-                n.checked_add(1).unwrap_or_else(|| slice_index_overflow_fail())
+                n.checked_add(1).unwrap_or_else(|| 0)
+                    //ddm .unwrap_or_else(|| slice_index_overflow_fail())
             }
             ops::Bound::Unbounded => 0,
         };
         let src_end = match src.end_bound() {
             ops::Bound::Included(&n) => {
-                n.checked_add(1).unwrap_or_else(|| slice_index_overflow_fail())
+                n.checked_add(1).unwrap_or_else(|| 0)
+                    //ddm .unwrap_or_else(|| slice_index_overflow_fail())
             }
             ops::Bound::Excluded(&n) => n,
             ops::Bound::Unbounded => self.len(),
@@ -2883,7 +2885,7 @@ impl<T> SliceIndex<[T]> for usize {
 impl<T> SliceIndex<[T]> for ops::Range<usize> {
     type Output = [T];
 
-    #[inline]
+    //#[inline]
     fn get(self, slice: &[T]) -> Option<&[T]> {
         if self.start > self.end || self.end > slice.len() {
             None
@@ -2892,7 +2894,7 @@ impl<T> SliceIndex<[T]> for ops::Range<usize> {
         }
     }
 
-    #[inline]
+    //#[inline]
     fn get_mut(self, slice: &mut [T]) -> Option<&mut [T]> {
         if self.start > self.end || self.end > slice.len() {
             None
@@ -2901,22 +2903,22 @@ impl<T> SliceIndex<[T]> for ops::Range<usize> {
         }
     }
 
-    #[inline]
+    //#[inline]
     unsafe fn get_unchecked(self, slice: &[T]) -> &[T] {
         from_raw_parts(slice.as_ptr().add(self.start), self.end - self.start)
     }
 
-    #[inline]
+    //#[inline]
     unsafe fn get_unchecked_mut(self, slice: &mut [T]) -> &mut [T] {
         from_raw_parts_mut(slice.as_mut_ptr().add(self.start), self.end - self.start)
     }
 
-    #[inline]
+    //#[inline]
     fn index(self, slice: &[T]) -> &[T] {
         if self.start > self.end {
-            slice_index_order_fail(self.start, self.end);
+            //slice_index_order_fail(self.start, self.end);
         } else if self.end > slice.len() {
-            slice_index_len_fail(self.end, slice.len());
+            //slice_index_len_fail(self.end, slice.len());
         }
         unsafe { self.get_unchecked(slice) }
     }
@@ -2924,9 +2926,9 @@ impl<T> SliceIndex<[T]> for ops::Range<usize> {
     #[inline]
     fn index_mut(self, slice: &mut [T]) -> &mut [T] {
         if self.start > self.end {
-            slice_index_order_fail(self.start, self.end);
+            //slice_index_order_fail(self.start, self.end);
         } else if self.end > slice.len() {
-            slice_index_len_fail(self.end, slice.len());
+            //slice_index_len_fail(self.end, slice.len());
         }
         unsafe { self.get_unchecked_mut(slice) }
     }
@@ -3041,7 +3043,7 @@ impl<T> SliceIndex<[T]> for ops::RangeFull {
 impl<T> SliceIndex<[T]> for ops::RangeInclusive<usize> {
     type Output = [T];
 
-    #[inline]
+    //#[inline]
     fn get(self, slice: &[T]) -> Option<&[T]> {
         if *self.end() == usize::max_value() {
             None
@@ -3050,7 +3052,7 @@ impl<T> SliceIndex<[T]> for ops::RangeInclusive<usize> {
         }
     }
 
-    #[inline]
+    //#[inline]
     fn get_mut(self, slice: &mut [T]) -> Option<&mut [T]> {
         if *self.end() == usize::max_value() {
             None
@@ -3059,28 +3061,28 @@ impl<T> SliceIndex<[T]> for ops::RangeInclusive<usize> {
         }
     }
 
-    #[inline]
+    //#[inline]
     unsafe fn get_unchecked(self, slice: &[T]) -> &[T] {
         (*self.start()..self.end() + 1).get_unchecked(slice)
     }
 
-    #[inline]
+    //#[inline]
     unsafe fn get_unchecked_mut(self, slice: &mut [T]) -> &mut [T] {
         (*self.start()..self.end() + 1).get_unchecked_mut(slice)
     }
 
-    #[inline]
+    //#[inline]
     fn index(self, slice: &[T]) -> &[T] {
         if *self.end() == usize::max_value() {
-            slice_index_overflow_fail();
+            //slice_index_overflow_fail();
         }
         (*self.start()..self.end() + 1).index(slice)
     }
 
-    #[inline]
+    //#[inline]
     fn index_mut(self, slice: &mut [T]) -> &mut [T] {
         if *self.end() == usize::max_value() {
-            slice_index_overflow_fail();
+            //slice_index_overflow_fail();
         }
         (*self.start()..self.end() + 1).index_mut(slice)
     }
@@ -3090,32 +3092,32 @@ impl<T> SliceIndex<[T]> for ops::RangeInclusive<usize> {
 impl<T> SliceIndex<[T]> for ops::RangeToInclusive<usize> {
     type Output = [T];
 
-    #[inline]
+    //#[inline]
     fn get(self, slice: &[T]) -> Option<&[T]> {
         (0..=self.end).get(slice)
     }
 
-    #[inline]
+    //#[inline]
     fn get_mut(self, slice: &mut [T]) -> Option<&mut [T]> {
         (0..=self.end).get_mut(slice)
     }
 
-    #[inline]
+    //#[inline]
     unsafe fn get_unchecked(self, slice: &[T]) -> &[T] {
         (0..=self.end).get_unchecked(slice)
     }
 
-    #[inline]
+    //#[inline]
     unsafe fn get_unchecked_mut(self, slice: &mut [T]) -> &mut [T] {
         (0..=self.end).get_unchecked_mut(slice)
     }
 
-    #[inline]
+    //#[inline]
     fn index(self, slice: &[T]) -> &[T] {
         (0..=self.end).index(slice)
     }
 
-    #[inline]
+    //#[inline]
     fn index_mut(self, slice: &mut [T]) -> &mut [T] {
         (0..=self.end).index_mut(slice)
     }
