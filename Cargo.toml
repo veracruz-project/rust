@@ -25,6 +25,9 @@ members = [
   "src/tools/rustdoc-themes",
   "src/tools/unicode-table-generator",
   "src/tools/expand-yaml-anchors",
+  "src/tools/rustc-std-workspace-core",
+  "src/tools/rustc-std-workspace-alloc",
+  "src/tools/rustc-std-workspace-std",
 ]
 exclude = [
   "build",
