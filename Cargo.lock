@@ -1787,8 +1787,7 @@ checksum = "b294d6fa9ee409a054354afc4352b0b9ef7ca222c69b8812cbea9e7d2bf3783f"
 [[package]]
 name = "libc"
 version = "0.2.69"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "99e85c08494b21a9054e7fe1374a732aeadaff3980b6990b94bfd3a70f690005"
+source = "git+https://github.com/veracruz-project/libc.git?branch=veracruz-69#f3f8446b8fceb444366e8e4fb3ce438bb8edbf0f"
 dependencies = [
  "rustc-std-workspace-core",
 ]
