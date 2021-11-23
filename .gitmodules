@@ -31,7 +31,7 @@
 [submodule "src/stdarch"]
 	path = src/stdarch
 	url = https://github.com/veracruz-project/stdarch.git
-    branch = veracruz
+	branch = veracruz-v1
 [submodule "src/doc/rustc-dev-guide"]
 	path = src/doc/rustc-dev-guide
 	url = https://github.com/rust-lang/rustc-dev-guide.git

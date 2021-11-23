@@ -1787,7 +1787,7 @@ checksum = "b294d6fa9ee409a054354afc4352b0b9ef7ca222c69b8812cbea9e7d2bf3783f"
 [[package]]
 name = "libc"
 version = "0.2.69"
-source = "git+https://github.com/veracruz-project/libc.git?branch=veracruz-69#f3f8446b8fceb444366e8e4fb3ce438bb8edbf0f"
+source = "git+https://github.com/veracruz-project/libc.git?branch=veracruz-v1#d0fe6d7685b87a1fa857825e7120b0b27758acce"
 dependencies = [
  "rustc-std-workspace-core",
 ]
